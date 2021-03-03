@@ -26,6 +26,25 @@ app.post('/desplegarContrato', (req, res) => {
   });
 });
 
+app.post('/addLibro', (req, res) => {
+  logic.addLibro(req.body.contractAddress, req.body.account, 
+    req.body.password, req.body.titulo, req.body.autor).then((msg) => {
+    console.log(msg);
+    res.status(201).send({
+        msg: msg
+    });
+  });
+});
+
+app.post('/getLibros', (req, res) => {
+  logic.getLibros(req.body.contractAddress, req.body.account, req.body.password).then((msg) => {
+    console.log(msg);
+    res.status(201).send({
+        msg: msg
+    });
+  });
+});
+
 app.post('/reservarLibro', (req, res) => {
   /* Te envio JSON  
     {

@@ -20,7 +20,8 @@ var contractAddress;
 module.exports = {
     crearCuenta: crearCuenta,
     desplegarContrato: desplegarContrato,
-    addLibro: addLibro
+    addLibro: addLibro,
+    getLibros: getLibros
 }  
 
 //========================================
@@ -31,7 +32,6 @@ async function crearCuenta(password) {
     await web3.eth.personal.newAccount(password).then(function (res) {
       accountAddress = res;
     });
-    console.log(accountAddress);
     return accountAddress;
   }
   
@@ -62,7 +62,39 @@ async function addLibro(contractAddress, account, password, titulo, autor) {
 
     await web3.eth.personal.unlockAccount(account, password, 600);
     let contractInstance = new web3.eth.Contract(libreria_abi, contractAddress);
-    
-    contractInstance.methods.addLibro(titulo,autor).send({from: account});
+    contractInstance.methods.addLibro(titulo,autor).send({from: account, gas: 1000000});
 
+    return "Añadido";
+}
+
+//========================================
+//             GET LIBROS
+//========================================
+async function getLibros(contractAddress, account, password) {
+
+  await web3.eth.personal.unlockAccount(account, password, 600);
+  let contractInstance = new web3.eth.Contract(libreria_abi, contractAddress);
+
+  let cont = await contractInstance.methods.contLibros().call({from: account});
+  let libros = new Map();
+
+  for (let i = 0; i < cont; i++ ){
+    let libro = await contractInstance.methods.getLibro(i).call({from: account});
+    console.log(libro);
+    libros.set(libro.titulo, {titulo: libro.titulo, autor: libro.autor});
   }
+
+  let tmp;
+  for (let [key, value] of libros.entries()) {
+    tmp = value.reduce(function (obj, b) {
+      obj[b] = ++obj[b] || 1;
+      return obj;
+    }, {});
+    libros.set(key, tmp);
+  }
+
+  console.log(libros);
+
+  return "Hola";
+
+}

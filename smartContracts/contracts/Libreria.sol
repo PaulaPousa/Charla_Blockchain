@@ -8,20 +8,31 @@ contract Libreria {
     }
 
     mapping(string => Libro) public libros; // Titulo => Libro
-    //Libro[] lista_libros; 
+    string[] lista_titulos; 
 
     event ReservarLibro(string nombre, string titulo, string date, address account);
 
     // --- Añadir un nuevo libro ---
     function addLibro(string memory titulo, string memory autor) public {
+        
         Libro memory new_libro = Libro(titulo, autor);
+        
+        // Añadir al mapping
         libros[titulo] = new_libro;
-        //lista_libros.push(new_libro);
+        
+        // Añadir al array
+        lista_titulos.push(titulo);
     }
 
-    // --- Obtener lista libros  ---
-    function getLibros() internal view returns (mapping(string => Libro) storage lista){
-        return libros;
+    // --- Obtener info de un libro  ---
+    function getLibro(uint256 id) public view returns (string memory titulo, string memory autor){
+        titulo = lista_titulos[id];
+        autor = libros[lista_titulos[id]].autor;
+    }
+
+    // --- Número de Libros ---
+    function contLibros() public view returns (uint256){
+        return lista_titulos.length;
     }
 
     // --- Reservar Libro  ---
