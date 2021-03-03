@@ -14,20 +14,21 @@ router.get('/', function (req, res) {
 
 router.post('/reservar', function (req, res) {
 
-    fetch('localhost:5000/reservarLibro', {
-        method: 'post',
-        body:    JSON.stringify(req.body),
-        headers: { 'Content-Type': 'application/json' },
-    })
-    .then(res => res.json())
-    .then(json => console.log(json));
+    // fetch('localhost:5000/reservarLibro', {
+    //     method: 'post',
+    //     body:    JSON.stringify(req.body),
+    //     headers: { 'Content-Type': 'application/json' },
+    // })
+    // .then(res => res.json())
+    // .then(json => console.log(json));
     
+    console.log(req.body);
     res.send('exito.html');
 });
 
-//add the router
+
 app.use('/', router);
 app.use('/reservar', router);
 app.listen(process.env.port || 3000);
 
-console.log('Running at Port 3000');
+console.log('http://localhost:3000');

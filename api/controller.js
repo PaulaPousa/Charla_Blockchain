@@ -26,6 +26,16 @@ app.post('/desplegarContrato', (req, res) => {
   });
 });
 
+app.post('/reservarLibro', (req, res) => {
+  /* Te envio JSON  
+    {
+      name: "Nombre de la persona",
+      book: "Titulo del libro"
+    }
+  */
+  res.status(200);
+});
+
 
 app.listen(port, () => {
   console.log("ESCUCHANDO: http://localhost:" + port);
