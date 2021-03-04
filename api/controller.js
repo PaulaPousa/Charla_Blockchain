@@ -10,46 +10,46 @@ const port = 4040;
 
 let logic = require("./model.js");
 
-app.post('/crearCuenta', (req, res) => {
-    logic.crearCuenta(req.body.password).then((address) => {
+app.post('/createAccount', (req, res) => {
+    logic.createAccount(req.body.password).then((address) => {
         res.status(201).send({
         address: address
         });
     });
 });
 
-app.post('/desplegarContrato', (req, res) => {
-  logic.desplegarContrato(req.body.account, req.body.password).then((address) => {
+app.post('/deployContract', (req, res) => {
+  logic.deployContract(req.body.account, req.body.password).then((address) => {
     res.status(201).send({
       address: address
     });
   });
 });
 
-app.post('/addLibro', (req, res) => {
-  logic.addLibro(req.body.titulo, req.body.autor, req.body.editorial).then((msg) => {
+app.post('/addBook', (req, res) => {
+  logic.addBook(req.body.title, req.body.author, req.body.editorial).then((tx) => {
     res.status(201).send({
-        msg: msg
+      tx: tx,
+      msg: "El libro se ha añadido correctamente"
     });
   });
 });
 
-app.get('/getLibros', (req, res) => {
-  logic.getLibros().then((libros) => {
+app.get('/getBooks', (req, res) => {
+  logic.getBooks().then((books) => {
     res.status(200).send({
-        libros: libros
+      books: books
     });
   });
 });
 
-app.post('/reservarLibro', (req, res) => {
-  /* Te envio JSON  
-    {
-      name: "Nombre de la persona",
-      book: "Titulo del libro"
-    }
-  */
-  res.status(200);
+app.post('/reserveBook', (req, res) => {
+  logic.reserveBook(req.body.user, req.body.title).then((tx) => {
+    res.status(201).send({
+        tx: tx,
+        msg: "Reserva realizada correctamente"
+    });
+  });
 });
 
 

@@ -10,7 +10,7 @@ const dotenv = require('dotenv').config({
 
 //----- Ganache -----
 let url = "http://localhost:8545"
-var accountAddress = "0x8fF973D270FD237126bD31C91dbBcaFeFFEDC9Ab";
+var accountAddress = "0x23752F5C8265FBb76781F2747DACC16c2cD010A1";
 var accountPassword = "";
 
 //----- Quorum -----
@@ -23,23 +23,24 @@ var web3 = new Web3(new Web3.providers.HttpProvider(url));
 
 
 //------- SmartContract ---------
-var libreria_file = fs.readFileSync(`${__dirname}/abis/Libreria.json`);
-let libreria_json = JSON.parse(libreria_file);
-let libreria_abi = libreria_json["abi"];
-let libreria_bytecode = libreria_json["bytecode"];
+var library_file = fs.readFileSync(`${__dirname}/abis/Library.json`);
+let library_json = JSON.parse(library_file);
+let library_abi = library_json["abi"];
+let library_bytecode = library_json["bytecode"];
 
 
 module.exports = {
-    crearCuenta: crearCuenta,
-    desplegarContrato: desplegarContrato,
-    addLibro: addLibro,
-    getLibros: getLibros
+  createAccount: createAccount,
+  deployContract: deployContract,
+  addBook: addBook,
+  getBooks: getBooks,
+  reserveBook: reserveBook
 }  
 
 //========================================
 //          CREAR UNA CUENTA
 //========================================
-async function crearCuenta(password) {
+async function createAccount(password) {
     var accountAddress;
     await web3.eth.personal.newAccount(password).then(function (res) {
       accountAddress = res;
@@ -51,12 +52,12 @@ async function crearCuenta(password) {
 //========================================
 //          DESPLEGAR CONTRATO
 //========================================
-async function desplegarContrato(account, password) {
+async function deployContract(account, password) {
     var contractAddress;
     await web3.eth.personal.unlockAccount(account, password, 600);
-    let newContract = new web3.eth.Contract(libreria_abi);
+    let newContract = new web3.eth.Contract(library_abi);
   
-    await newContract.deploy({ data: libreria_bytecode }).send({
+    await newContract.deploy({ data: library_bytecode }).send({
       from: account,
       gas: web3.utils.toHex(3000000),
       gasPrice: '0'
@@ -70,42 +71,42 @@ async function desplegarContrato(account, password) {
 //========================================
 //          AÑADIR UN LIBRO
 //========================================
-async function addLibro(titulo, autor, editorial) {
+async function addBook(tittle, author, editorial) {
     
   var contractAddress = dotenv.parsed.CONTRACT;
 
-    await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
-    let contractInstance = new web3.eth.Contract(libreria_abi, contractAddress);
+  await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
+  let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
-    await contractInstance.methods.addLibro(titulo,autor,editorial).send({from: accountAddress, gas: 1000000});
+  var tx = await contractInstance.methods.addBook(tittle, author, editorial).send({from: accountAddress, gas: 1000000});
 
-    return "Libro añadido correctamente";
+  return tx.transactionHash;
 }
 
 //========================================
 //             GET LIBROS
 //========================================
-async function getLibros() {
+async function getBooks() {
 
   var contractAddress = dotenv.parsed.CONTRACT;
 
   await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
-  let contractInstance = new web3.eth.Contract(libreria_abi, contractAddress);
+  let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
-  let cont = await contractInstance.methods.contLibros().call({from: accountAddress});
-  let libros = new Map();
+  let num = await contractInstance.methods.numberBooks().call({from: accountAddress});
+  let books = new Map();
 
-  for (let i = 0; i < cont; i++ ){
-    let libro = await contractInstance.methods.getLibro(i).call({from: accountAddress});
-    libros.set(i, {titulo: libro.titulo, autor: libro.autor, editorial: libro.editorial});
+  for (let i = 0; i < num; i++ ){
+    let book = await contractInstance.methods.getBook(i).call({from: accountAddress});
+    books.set(i, {title: book.title, author: book.author, editorial: book.editorial});
   }
 
-  let jsonObject = {};  
-  libros.forEach((value, key) => {  
-      jsonObject[key] = value  
+  let jsonBooks = {};  
+  books.forEach((value, key) => {  
+    jsonBooks[key] = value  
   });  
 
-  return JSON.stringify(jsonObject);
+  return jsonBooks;
 
 }
 
@@ -113,7 +114,15 @@ async function getLibros() {
 //========================================
 //            RESERVAR LIBRO
 //========================================
-async function reservarLibro(name, title) {
+async function reserveBook(user, title) {
 
-  
+  var contractAddress = dotenv.parsed.CONTRACT;
+
+  await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
+  let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
+
+  var date = Date.now();
+  var tx = await contractInstance.methods.reserveBook(user, title, date.toString()).send({from: accountAddress, gas: 1000000});
+
+  return tx.transactionHash;
 }
