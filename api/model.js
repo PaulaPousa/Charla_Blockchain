@@ -9,14 +9,10 @@ const dotenv = require('dotenv').config({
 
 //----- Ganache -----
 let url = "http://localhost:8545"
-var accountAddress = "0x23752F5C8265FBb76781F2747DACC16c2cD010A1";
-var accountPassword = "";
-
+let red = "ganache";
 //----- Quorum -----
-/*let url = http://localhost:22000
-var contractAddress = dotenv.parsed.CONTRACT;
-var accountAddress = dotenv.parsed.ACCOUNT;
-var accountPassword = dotenv.parsed.PASSWORD;*/
+//let url = http://localhost:22000
+//let red = "quorum";
 
 var web3 = new Web3(new Web3.providers.HttpProvider(url));
 
@@ -34,7 +30,28 @@ module.exports = {
   addBook: addBook,
   getBooks: getBooks,
   reserveBook: reserveBook
-}  
+}
+
+//========================================
+//            AUXILIAR
+//========================================
+async function getAccount() {
+  var account;
+  var password;
+
+  if (red == "ganache") {
+    var accounts = await web3.eth.personal.getAccounts();
+    account = await web3.utils.toChecksumAddress(accounts[0]);
+    console.log(account);
+    password = "";
+
+  } else {
+    account = await web3.utils.toChecksumAddress(dotenv.parsed.ACCOUNT);
+    password = dotenv.parsed.PASSWORD;
+  }
+
+  return {"account": account, "password": password };
+}
 
 //========================================
 //          CREAR UNA CUENTA
@@ -73,11 +90,15 @@ async function deployContract(account, password) {
 async function addBook(tittle, author, editorial) {
     
   var contractAddress = dotenv.parsed.CONTRACT;
+  var user = await getAccount();
 
-  await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
+  console.log(user);
+  console.log(user.account);
+
+  await web3.eth.personal.unlockAccount(user.account, user.password, 600);
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
-  var tx = await contractInstance.methods.addBook(tittle, author, editorial).send({from: accountAddress, gas: 1000000});
+  var tx = await contractInstance.methods.addBook(tittle, author, editorial).send({from: user.account, gas: 1000000});
 
   return tx.transactionHash;
 }
@@ -88,15 +109,16 @@ async function addBook(tittle, author, editorial) {
 async function getBooks() {
 
   var contractAddress = dotenv.parsed.CONTRACT;
+  var user = await getAccount();
 
-  await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
+  await web3.eth.personal.unlockAccount(user.account, user.password, 600);
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
-  let num = await contractInstance.methods.numberBooks().call({from: accountAddress});
+  let num = await contractInstance.methods.numberBooks().call({from: user.account});
   let books = new Map();
 
   for (let i = 0; i < num; i++ ){
-    let book = await contractInstance.methods.getBook(i).call({from: accountAddress});
+    let book = await contractInstance.methods.getBook(i).call({from: user.account});
     books.set(i, {title: book.title, author: book.author, editorial: book.editorial});
   }
 
@@ -116,12 +138,13 @@ async function getBooks() {
 async function reserveBook(user, title) {
 
   var contractAddress = dotenv.parsed.CONTRACT;
+  var user = await getAccount();
 
-  await web3.eth.personal.unlockAccount(accountAddress, accountPassword, 600);
+  await web3.eth.personal.unlockAccount(user.account, user.password, 600);
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
   var date = Date.now();
-  var tx = await contractInstance.methods.reserveBook(user, title, date.toString()).send({from: accountAddress, gas: 1000000});
+  var tx = await contractInstance.methods.reserveBook(user, title, date.toString()).send({from: user.account, gas: 1000000});
 
   return tx.transactionHash;
 }
