@@ -1,6 +1,6 @@
 import requests, json
 
-def añadirLibro(titulo, autor, editorial):
+def addLibro(titulo, autor, editorial):
     params = {"title": titulo, "author": autor, "editorial": editorial }
 
     res = requests.post('http://localhost:4040/addBook', json=params)
@@ -25,10 +25,10 @@ def reservarLibro(title, user):
 
 def main():
     
-    for i in range(6):
-       añadirLibro("Libro_" + str(i), "autor_" + str(i), "editorial_" + str(i))
+    #for i in range(6):
+    #   addLibro("Libro_" + str(i), "autor_" + str(i), "editorial_" + str(i))
     
-    getLibros()
+    #getLibros()
 
     reservarLibro("Libro_2", "Manolo")
 
