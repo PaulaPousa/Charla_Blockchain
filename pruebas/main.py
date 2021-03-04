@@ -25,12 +25,12 @@ def reservarLibro(title, user):
 
 def main():
     
-    #for i in range(6):
-    #   addLibro("Libro_" + str(i), "autor_" + str(i), "editorial_" + str(i))
+    for i in range(6):
+       addLibro("Libro_" + str(i), "autor_" + str(i), "editorial_" + str(i))
     
-    #getLibros()
+    # getLibros()
 
-    reservarLibro("Libro_2", "Manolo")
+    # reservarLibro("Libro_2", "Manolo")
 
 
 main() 

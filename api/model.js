@@ -148,6 +148,8 @@ async function reserveBook(name, title) {
 
   var date = new Date();
   console.log(date.toString());
+  console.log("\n Name --> " + name + "\n");
+  console.log("\n Title --> " + title + "\n");
   var tx = await contractInstance.methods.reserveBook(name, title,  date.toString()).send({from: user.account, gas: 1000000});
 
   return tx.transactionHash;

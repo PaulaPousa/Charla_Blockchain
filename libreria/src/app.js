@@ -9,28 +9,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.get('/', function (req, res) {
-    fetch('http://localhost:4040/getLibros', {
+    fetch('http://localhost:4040/getBooks', {
         method: 'get'
     })
     .then(res => res.json())
-    .then(json => console.log(json));
-
-    let book = "potatoe"
-    res.render('index', {book: book});
+    .then(json => {
+      json = json["books"];
+      res.render('index', {books: json});
+    });
 });
 
 app.post('/reservar', function (req, res) {
-
-    // fetch('localhost:4040/reservarLibro', {
-    //     method: 'post',
-    //     body:    JSON.stringify(req.body),
-    //     headers: { 'Content-Type': 'application/json' },
-    // })
-    // .then(res => res.json())
-    // .then(json => console.log(json));
-    
-    console.log(req.body);
-    res.render('exito');
+    let selectedBook = JSON.stringify(req.body);
+    console.log(selectedBook);
+    fetch('http://localhost:4040/reserveBook', {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body:    selectedBook
+    })
+    .then(res => res.json())
+    .then(json => {
+      res.render('exito', {reserva: json["msg"]});
+    });
 });
 
 app.listen(3000, function(){

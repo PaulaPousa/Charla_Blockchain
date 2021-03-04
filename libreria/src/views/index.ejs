@@ -13,16 +13,21 @@
 
 <body>
     <div class="input-page">
-        <div>
-            <h3>TEXTO</h3>
-            <p><%= book %></p>
+        <div class="form">
+            <h2><b>Libros Disponibles</b></h3>
+            <% Object.keys(books).forEach(item => { %>
+            <p><b>Titulo</b>: <%= books[item].title %> - <b>Autor</b>: <%= books[item].author %><p>
+            <% }) %>
         </div>
         <div class="form">
             <form action="/reservar" method="post">
-                <input type="text" name="name" placeholder="Nombre" />
+                <input type="text" name="user" placeholder="Nombre" />
                 <input type="text" name="title" placeholder="Libro" />
                 <button>Reservar</button>
             </form>
+        </div>
+        <div class="form">
+
         </div>
     </div>
 </body>
