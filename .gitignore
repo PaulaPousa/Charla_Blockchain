@@ -1,6 +1,7 @@
 # node modules
 api/node_modules
-
+api/.env_variables    
+pruebas/.env_variables
 
 # Logs
 logs
