@@ -7,7 +7,6 @@ const dotenv = require('dotenv').config({
 });
 
 
-
 //----- Ganache -----
 let url = "http://localhost:8545"
 var accountAddress = "0x23752F5C8265FBb76781F2747DACC16c2cD010A1";
