@@ -8,11 +8,11 @@ const dotenv = require('dotenv').config({
 
 
 //----- Ganache -----
-let url = "http://localhost:8545";
-let red = "ganache";
+//let url = "http://localhost:8545";
+//let red = "ganache";
 //----- Quorum -----
-//let url = "http://localhost:22000";
-//let red = "quorum";
+let url = "http://localhost:22000";
+let red = "quorum";
 
 var web3 = new Web3(new Web3.providers.HttpProvider(url));
 
@@ -42,7 +42,6 @@ async function getAccount() {
   if (red == "ganache") {
     var accounts = await web3.eth.personal.getAccounts();
     account = await web3.utils.toChecksumAddress(accounts[0]);
-    console.log(account);
     password = "";
 
   } else {
@@ -92,17 +91,11 @@ async function addBook(tittle, author, editorial) {
   var contractAddress = dotenv.parsed.CONTRACT;
   var user = await getAccount();
 
-  console.log(user);
-  console.log(user.account);
-
   await web3.eth.personal.unlockAccount(user.account, user.password, 600);
-  console.log("He pasdo el desbloqueo");
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
-  console.log("He pasdo la instancia del contrato");
   var tx = await contractInstance.methods.addBook(tittle, author, editorial).send({from: user.account, gas: 1000000});
 
-  console.log("He pasdo add Book");
   return tx.transactionHash;
 }
 
@@ -147,9 +140,6 @@ async function reserveBook(name, title) {
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
   var date = new Date();
-  console.log(date.toString());
-  console.log("\n Name --> " + name + "\n");
-  console.log("\n Title --> " + title + "\n");
   var tx = await contractInstance.methods.reserveBook(name, title,  date.toString()).send({from: user.account, gas: 1000000});
 
   return tx.transactionHash;
