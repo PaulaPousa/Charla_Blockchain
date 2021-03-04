@@ -25,8 +25,12 @@ def reservarLibro(title, user):
 
 def main():
     
-    for i in range(6):
-       addLibro("Libro_" + str(i), "autor_" + str(i), "editorial_" + str(i))
+    addLibro("Practical Malware Analysis", "Sikorski Honig", "XXX")
+    addLibro("The Art of Exploitation", "jon Erickson", "XXX")
+    addLibro("Resistencia Digital", "Enric Borras", "XXX")
+    addLibro("The Art of Invisibility", "Kevin Mitnick", "XXX")
+    addLibro("The Book of Satoshi", "Phil Champagne", "XXX")
+    addLibro("Identidad Digitial Descentralizada", "Lucas Carmona Ampuero", "XXX")
     
     # getLibros()
 
