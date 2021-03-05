@@ -23,6 +23,14 @@ def reservarLibro(title, user):
     print(res)
 
 
+def getReservas():
+
+    res = requests.get('http://localhost:4040/getReserve')
+    res = json.loads(res.text)
+
+    print(res)
+
+
 def main():
     
     addLibro("Practical Malware Analysis", "Sikorski Honig", "XXX")
@@ -32,9 +40,11 @@ def main():
     addLibro("The Book of Satoshi", "Phil Champagne", "XXX")
     addLibro("Identidad Digitial Descentralizada", "Lucas Carmona Ampuero", "XXX")
     
-    # getLibros()
+    #getLibros()
 
-    # reservarLibro("Libro_2", "Manolo")
+    #reservarLibro("Libro_2", "Manolo")
+
+    #getReservas()
 
 
 main() 

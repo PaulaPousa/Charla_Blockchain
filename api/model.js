@@ -8,14 +8,13 @@ const dotenv = require('dotenv').config({
 
 
 //----- Ganache -----
-//let url = "http://localhost:8545";
-//let red = "ganache";
+let url = "http://localhost:8545";
+let red = "ganache";
 //----- Quorum -----
-let url = "http://localhost:22000";
-let red = "quorum";
+//let url = "http://localhost:22000";
+//let red = "quorum";
 
 var web3 = new Web3(new Web3.providers.HttpProvider(url));
-
 
 //------- SmartContract ---------
 var library_file = fs.readFileSync(`${__dirname}/abis/Library.json`);
@@ -29,7 +28,8 @@ module.exports = {
   deployContract: deployContract,
   addBook: addBook,
   getBooks: getBooks,
-  reserveBook: reserveBook
+  reserveBook: reserveBook,
+  getReserve: getReserve
 }
 
 //========================================
@@ -41,7 +41,7 @@ async function getAccount() {
 
   if (red == "ganache") {
     var accounts = await web3.eth.personal.getAccounts();
-    account = await web3.utils.toChecksumAddress(accounts[0]);
+    account = await web3.utils.toChecksumAddress(accounts[1]);
     password = "";
 
   } else {
@@ -140,7 +140,38 @@ async function reserveBook(name, title) {
   let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
 
   var date = new Date();
-  var tx = await contractInstance.methods.reserveBook(name, title,  date.toString()).send({from: user.account, gas: 1000000});
+  var tx = await contractInstance.methods.reserveBook(name, title).send({from: user.account, gas: 1000000});
 
   return tx.transactionHash;
+}
+
+
+//========================================
+//           OBTENER RESERVAS 
+//========================================
+async function getReserve() {
+
+  var contractAddress = dotenv.parsed.CONTRACT;
+  var user = await getAccount();
+
+  await web3.eth.personal.unlockAccount(user.account, user.password, 600);
+  let contractInstance = new web3.eth.Contract(library_abi, contractAddress);
+
+  let event = await contractInstance.getPastEvents("BookReserve", {
+    fromBlock: 0,
+    toBlock: "latest"
+  });
+
+  let reserve = new Map();
+
+  for (let i = 0; i < event.length; i++) {
+    reserve.set(i, event[i].returnValues);
+  }
+
+  let jsonReserve = {};  
+  reserve.forEach((value, key) => {  
+    jsonReserve[key] = value
+  });  
+
+  return jsonReserve;
 }

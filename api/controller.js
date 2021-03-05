@@ -52,6 +52,14 @@ app.post('/reserveBook', (req, res) => {
   });
 });
 
+app.get('/getReserve', (req, res) => {
+  logic.getReserve().then((tx) => {
+    res.status(201).send({
+        tx: tx,
+    });
+  });
+});
+
 
 app.listen(port, () => {
   console.log("ESCUCHANDO: http://localhost:" + port);

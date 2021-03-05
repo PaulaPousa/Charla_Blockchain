@@ -12,7 +12,7 @@ contract Library {
     mapping(string => Book) public books; // Titulo => Libro
     string[] list_titles; 
 
-    event BookReserve(string user, string title, string date, address account);
+    event BookReserve(string user, string title, uint256 date, address account);
 
     //========================================
     //             AÑADIR LIBRO
@@ -51,7 +51,8 @@ contract Library {
     //========================================
     //            RESERVAR LIBRO
     //========================================
-    function reserveBook(string memory user, string memory title, string memory date) public {
-        emit BookReserve(user, title, date, msg.sender);
+    function reserveBook(string memory user, string memory title) public {
+        emit BookReserve(user, title, block.timestamp, msg.sender);
     }
+
 }
