@@ -138,3 +138,26 @@ Mandar un evento a la blockchain con la reserva del libro.
     "msg": "Reserva realizada correctamente"
 }
 ```
+
+## Get Reserve 
+Obtener todas las reservas de libros.
+
+**URL** : `GET /getReserve`
+
+### Response
+
+**Code** : `200 OK`
+
+**Example**
+```json
+{
+    "books": 
+        {"0": 
+            {"title": "Libro_0", 
+            "author": "autor_0"}, 
+        "1": 
+            {"title": "Libro_1", 
+            "author": "autor_1"}
+        }
+}
+```
