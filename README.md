@@ -75,7 +75,7 @@ $ make api # Levantar la api (puerto=4040)
 $ make entorno # Generar un nuevo contrato y usuario
 $ make main # Añadir libros, obtener libros y reservar libro.
 ```
-¡Importante! Generar un entorno antes de ejecutar ``make main``
+¡Importante! Generar un entorno antes de ejecutar ``make main`` y relevantar la api para que se actualice el ``.env``
 
 
 ## Importante
