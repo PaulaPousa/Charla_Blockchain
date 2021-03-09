@@ -68,9 +68,6 @@ truffle migrate 	# Desplegar los contratos
 
 ## Makefile
 ```bash 
-#API
-$ make api # Levantar la api (puerto=4040)
-
 #Pruebas
 $ make entorno # Generar un nuevo contrato y usuario
 $ make main # Añadir libros, obtener libros y reservar libro.
