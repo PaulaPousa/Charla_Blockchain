@@ -8,11 +8,11 @@ const dotenv = require('dotenv').config({
 
 
 //----- Ganache -----
-let url = "http://localhost:8545";
-let red = "ganache";
+//let url = "http://localhost:8545";
+//let red = "ganache";
 //----- Quorum -----
-//let url = "http://localhost:22000";
-//let red = "quorum";
+let url = "http://localhost:22000";
+let red = "quorum";
 
 var web3 = new Web3(new Web3.providers.HttpProvider(url));
 
@@ -165,7 +165,13 @@ async function getReserve() {
   let reserve = new Map();
 
   for (let i = 0; i < event.length; i++) {
-    reserve.set(i, event[i].returnValues);
+    reserva = {
+      "user": event[i].returnValues["user"],
+      "title": event[i].returnValues["title"],
+      "date": event[i].returnValues["date"],
+      "account": event[i].returnValues["account"]
+    }
+    reserve.set(i, reserva);
   }
 
   let jsonReserve = {};  

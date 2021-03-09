@@ -28,7 +28,7 @@ def getReservas():
     res = requests.get('http://localhost:4040/getReserve')
     res = json.loads(res.text)
 
-    print(res)
+    print(res['tx'])
 
 
 def main():
@@ -42,9 +42,12 @@ def main():
     
     #getLibros()
 
-    #reservarLibro("Libro_2", "Manolo")
-
-    #getReservas()
+    #reservarLibro("Practical Malware Analysis", "Manolo")
+    #reservarLibro("Resistencia Digital", "Ana")
+    #reservarLibro("The Book of Satoshi", "Pepe")
+    #reservarLibro("Identidad Digitial Descentralizada", "Maria")
+   
+    getReservas()
 
 
 main() 
